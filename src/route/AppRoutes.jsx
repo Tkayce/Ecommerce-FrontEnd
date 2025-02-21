@@ -6,6 +6,8 @@ import SignUp from "../pages/SignUp";
 import LiveChat from "../pages/LiveChat";
 import Help from "../pages/Help";
 import Suggestions from "../pages/Suggestions";
+import ProductList from "../components/ProductList";
+import ProductDetails from "../components/ProductDetails";
 
 const AppRoutes = () => {
   return (
@@ -16,6 +18,8 @@ const AppRoutes = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/livechat" element={<LiveChat />} />
+        <Route path="/" element={<Home />} />  {/* Home contains ProductList */}
+        <Route path="/product/:id" element={<ProductDetails />} /> {/* Product Details Page */}
         <Route path="/help" element={<Help />} />
         <Route path="/suggestions" element={<Suggestions />} />
       </Routes>
