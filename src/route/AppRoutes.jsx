@@ -8,6 +8,11 @@ import Help from "../pages/Help";
 import Suggestions from "../pages/Suggestions";
 import ProductList from "../components/ProductList";
 import ProductDetails from "../components/ProductDetails";
+import TechSupport from "../pages/TechSupport";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import CategoryPage from "../pages/CategoryPage";
+import ResetPassword from "../pages/ResetPassword";
+import ForgotPassword from "../pages/ForgotPassword";
 
 const AppRoutes = () => {
   return (
@@ -18,10 +23,16 @@ const AppRoutes = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/livechat" element={<LiveChat />} />
-        <Route path="/" element={<Home />} />  {/* Home contains ProductList */}
-        <Route path="/product/:id" element={<ProductDetails />} /> {/* Product Details Page */}
-        <Route path="/help" element={<Help />} />
+        <Route path="/" element={<Home />} />  
+        <Route path="/product/:id" element={<ProductDetails />} /> 
         <Route path="/suggestions" element={<Suggestions />} />
+        <Route path="/tech-support" element={<TechSupport />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/category/:categoryName" element={<CategoryPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+      
       </Routes>
     </Router>
   );

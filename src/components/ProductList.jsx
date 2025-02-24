@@ -46,10 +46,10 @@ const ProductList = () => {
   if (loading) return <p>Loading products...</p>;
 
   return (
-    <div className="p-4">
-      {/* Notification */}
+    <div className="p-4 relative">
+      {/* Notification (Always on top) */}
       {showNotification && (
-        <div className="fixed top-10 right-10 bg-blue-500 text-white px-4 py-2 rounded shadow-lg">
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded shadow-lg z-50 text-center transition-opacity duration-500">
           Please sign in to complete your purchase!
         </div>
       )}
