@@ -31,7 +31,7 @@ const AppRoutes = () => {
         <Route path="/help" element={<Help />} />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       
       </Routes>
     </Router>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [userData, setUserData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -18,21 +18,36 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+  
     try {
-      const response = await fetch("https://localhost:44329/api/auth/signup", {
+      const response = await fetch("https://localhost:44329/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
-      const result = await response.json();
+  
+      // Read response as text first
+      const text = await response.text();
+      console.log("Raw Response:", text);  // Debugging
+  
+      // Try to parse JSON
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (error) {
+        throw new Error("Unexpected response from server: " + text);
+      }
+  
       if (!response.ok) throw new Error(result.message || "Signup failed");
+  
       alert("Signup successful! Please Sign in.");
       navigate("/signin");
     } catch (err) {
+      console.error(err);
       setError(err.message);
     }
   };
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
