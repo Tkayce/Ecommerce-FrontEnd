@@ -2,17 +2,25 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaStar } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState({});
-  const [addedToCart, setAddedToCart] = useState({});
+  const [addedToCart, setAddedToCart] = useState(() => {
+    const savedCart = JSON.parse(localStorage.getItem("addedToCart")) || {};
+    return savedCart;
+  });
   const [showNotification, setShowNotification] = useState(false);
-  const { addToCart } = useCart();
+
+  const { addToCart, cartItems } = useCart();
+  const { isAuthenticated } = useAuth();
+  const reduxAuth = useSelector((state) => state.auth.isAuthenticated); // ✅ Moved outside
 
   useEffect(() => {
-    fetch("https://localhost:44329/api/product")
+    fetch("https://localhost:44329/api/Product")
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched products:", data);
@@ -25,6 +33,10 @@ const ProductList = () => {
       });
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("addedToCart", JSON.stringify(addedToCart));
+  }, [addedToCart]);
+
   const handleStarClick = (productId, starIndex) => {
     setRatings((prevRatings) => ({
       ...prevRatings,
@@ -33,24 +45,32 @@ const ProductList = () => {
   };
 
   const handleAddToCart = (product) => {
-    if (!addedToCart[product.id]) {
-      addToCart(product);
-      setAddedToCart((prev) => ({ ...prev, [product.id]: true }));
+    if (!isAuthenticated && !reduxAuth) {  
       setShowNotification(true);
-
-      // Hide notification after 3 seconds
-      setTimeout(() => setShowNotification(false), 3000);
+      console.log("❌ User not authenticated. Showing notification.");
+      setTimeout(() => setShowNotification(false), 2000);
+      return;
     }
+  
+    addToCart(product); // This should update the context/state immediately
+    console.log("✅ Product Added to Cart:", product);
+  
+    setAddedToCart((prev) => ({ ...prev, [product.id]: true }));
+  
+    // 🔥 Update UI instantly by forcing a re-render
+    setCartCount([...cartItems, product]); // ✅ This ensures instant UI update
+    
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 2000);
   };
-
-  if (loading) return <p>Loading products...</p>;
+  
 
   return (
     <div className="p-4 relative">
-      {/* Notification (Always on top) */}
+      {/* Notification */}
       {showNotification && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded shadow-lg z-50 text-center transition-opacity duration-500">
-          Please sign in to complete your purchase!
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 text-center transition-opacity duration-500">
+          Added to Cart!
         </div>
       )}
 
@@ -92,7 +112,10 @@ const ProductList = () => {
 
             {/* Add to Cart */}
             <button
-              onClick={() => handleAddToCart(product)}
+              onClick={() => {
+                console.log("🛒 Add to Cart Clicked for:", product);
+                handleAddToCart(product);
+              }}
               className={`mt-2 px-4 py-2 rounded flex items-center transition ${
                 addedToCart[product.id]
                   ? "bg-gray-400 cursor-not-allowed"
@@ -100,7 +123,8 @@ const ProductList = () => {
               }`}
               disabled={addedToCart[product.id]}
             >
-              <FaShoppingCart className="mr-2" /> {addedToCart[product.id] ? "Added" : "Add to Cart"}
+              <FaShoppingCart className="mr-2" />
+              {addedToCart[product.id] ? "Added" : "Add to Cart"}
             </button>
           </div>
         ))}

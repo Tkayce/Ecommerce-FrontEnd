@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/authSlice"; // Import Redux login action
 
 const SignIn = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Redux Dispatch
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -14,21 +16,28 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
       const response = await fetch("https://localhost:44329/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
+
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Signin failed");
+
+      // ✅ Dispatch login action
+      dispatch(login(result.user)); // Expecting { name, email }
+
       alert("Signin successful!");
-      navigate("/home");
+      navigate("/");
     } catch (err) {
       setError(err.message);
     }
   };
 
+  // ✅ The return statement must be inside the function
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
@@ -51,20 +60,13 @@ const SignIn = () => {
           <div className="mb-4 relative">
             <label className="block text-gray-600">Password</label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
               name="password"
               placeholder="Enter your password"
               onChange={handleChange}
               required
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-lg focus:ring focus:ring-blue-400"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-9 text-sm text-blue-600 hover:text-blue-800"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
           </div>
 
           <button type="submit" className="w-full py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700">

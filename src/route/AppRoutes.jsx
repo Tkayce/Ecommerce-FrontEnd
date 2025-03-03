@@ -13,7 +13,8 @@ import PrivacyPolicy from "../pages/PrivacyPolicy";
 import CategoryPage from "../pages/CategoryPage";
 import ResetPassword from "../pages/ResetPassword";
 import ForgotPassword from "../pages/ForgotPassword";
-
+import Login from "../pages/Login";
+import AddToCart from "../components/AddToCart";
 const AppRoutes = () => {
   return (
     <Router>
@@ -32,7 +33,8 @@ const AppRoutes = () => {
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-      
+        <Route path="/login" element={<Login />} />
+        <Route path="/add-to-cart" element={<AddToCart />} />
       </Routes>
     </Router>
   );
