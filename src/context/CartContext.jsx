@@ -1,4 +1,8 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCart, addToCart } from "../redux/cartSlice";
+import React, {  useState, useEffect } from "react";
+
 
 const CartContext = createContext();
 
@@ -10,43 +14,23 @@ export const useCart = () => {
   return context;
 };
 
-export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+export const CartProvider = ({ children, customerId }) => {
+  const dispatch = useDispatch();
+  const { cartItems, loading, error } = useSelector((state) => state.cart);
 
-  // ✅ Load cart from local storage on mount
+  // Fetch cart when customerId changes
   useEffect(() => {
-    console.log("🔄 Loading Cart from localStorage...");
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      try {
-        const parsedCart = JSON.parse(storedCart);
-        setCartItems(parsedCart);
-        console.log("✅ Loaded Cart from Storage:", parsedCart);
-      } catch (error) {
-        console.error("❌ Error parsing cart from storage:", error);
-      }
-    } else {
-      console.log("🛒 No cart data found in storage");
+    if (customerId) {
+      dispatch(fetchCart(customerId));
     }
-  }, []);
+  }, [customerId, dispatch]);
 
-  // ✅ Function to add items to cart
-  const addToCart = (product) => {
-    console.log("🛒 Attempting to add product:", product);
-
-    setCartItems((prevCart) => {
-      const updatedCart = [...prevCart, product];
-      console.log("📂 Updating Cart State:", updatedCart);
-
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      console.log("🛒 Cart Updated in Context:", JSON.parse(localStorage.getItem("cart")));
-      
-      return updatedCart;
-    });
+  const addProductToCart = (productId, quantity = 1) => {
+    dispatch(addToCart({ customerId, productId, quantity }));
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart }}>
+    <CartContext.Provider value={{ cartItems, addProductToCart, loading, error }}>
       {children}
     </CartContext.Provider>
   );
