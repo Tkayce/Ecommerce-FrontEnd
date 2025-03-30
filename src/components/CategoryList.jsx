@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const categories = [
-  "Home & Kitchen",
-  "Women's Clothing",
-  "Men's Clothing",
-  "Jewelry and Accessory",
-  "Instrument",
-  "Cell Phones and accessories",
-  "Tools and Equipment",
-  "Bags and Luggage",
-  "Electronics",
-  "Upholstery",
+  { id: 1, name: "Home & Kitchen" },
+  { id: 2, name: "Women's Clothing" },
+  { id: 3, name: "Men's Clothing" },
+  { id: 4, name: "Jewelry and Accessory" },
+  { id: 5, name: "Instrument" },
+  { id: 6, name: "Cell Phones and accessories" },
+  { id: 7, name: "Tools and Equipment" },
+  { id: 8, name: "Bags and Luggage" },
+  { id: 9, name: "Electronics" },
+  { id: 10, name: "Upholstery" },
 ];
 
 const CategoryList = () => {
@@ -30,37 +30,29 @@ const CategoryList = () => {
 
   return (
     <div className="mt-8">
-      {/* Category Header */}
-      <h2 className="text-xl font-bold p-4 shadow-md ">Categories</h2>
-
-      {/* Scrollable Category List */}
+      <h2 className="text-xl font-bold p-4 shadow-md">Categories</h2>
       <div className="relative flex items-center">
-        {/* Left Scroll Button */}
         <button
           onClick={() => handleScroll("left")}
           className="absolute left-0 p-2 bg-white shadow-md rounded-full"
         >
           <FaChevronLeft />
         </button>
-
-        {/* Category Items */}
         <div
           ref={scrollRef}
-          className="flex space-x-4 overflow-x-auto scrollbar-hide  p-3 rounded-md"
+          className="flex space-x-4 overflow-x-auto scrollbar-hide p-3 rounded-md"
           style={{ scrollbarWidth: "none" }}
         >
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <button
-              key={index}
-              onClick={() => navigate(`/category/${category.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`)}
+              key={category.id}
+              onClick={() => navigate(`/category/${category.id}`)}
               className="whitespace-nowrap px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md shadow-md"
             >
-              {category}
+              {category.name}
             </button>
           ))}
         </div>
-
-        {/* Right Scroll Button */}
         <button
           onClick={() => handleScroll("right")}
           className="absolute right-0 p-2 bg-white shadow-md rounded-full"

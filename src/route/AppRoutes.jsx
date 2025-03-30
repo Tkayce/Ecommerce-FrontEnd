@@ -30,7 +30,7 @@ const AppRoutes = () => {
         <Route path="/tech-support" element={<TechSupport />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/category/:categoryName" element={<CategoryPage />} />
+        <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/login" element={<Login />} />

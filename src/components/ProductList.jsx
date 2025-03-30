@@ -22,7 +22,7 @@ const ProductList = () => {
     console.log("🔄 Fetching latest products & cart data...");
 
     // Fetch Products (Force Fresh Data)
-    fetch(`https://localhost:44329/api/Product?nocache=${Date.now()}`)
+    fetch(`https://localhost:44329/api/Product/without-category?nocache=${Date.now()}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("✅ Products fetched:", data);
